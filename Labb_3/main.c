@@ -72,6 +72,4 @@ int main(void)
         case '8': break;
         }
     } while (userinput != '9');
-    
-
 }
