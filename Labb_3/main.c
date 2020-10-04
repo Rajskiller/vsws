@@ -12,6 +12,8 @@
 void startMenu(void);
 void register_new_account();
 void print_all_accounts();
+// Medain function of all accounts
+// Average value of all accounts
 
 //Functions
 void startMenu(void)
@@ -49,6 +51,7 @@ typedef struct
 {
     char account_number[ACCOUNT_NUMBER_MAX+1];
     char owner_name[NAMESIZE+1];
+    float balance;
 }Account;
 
 
@@ -72,5 +75,4 @@ int main(void)
         case '8': break;
         }
     } while (userinput != '9');
-    printf("hej");
 }
