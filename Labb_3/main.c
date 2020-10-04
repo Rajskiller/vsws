@@ -31,9 +31,6 @@ void startMenu(void)
 }
 void register_new_account()
 {
-    for(int i =0; i<ACCOUNTMAX;i++){
-       // if(strcmp())
-    }
 
 }
 void print_all_accounts()// Check 
@@ -60,12 +57,12 @@ int main(void)
     Account account_Quantity[ACCOUNTMAX]; // Numbers of accounts that exist.
     char userinput;
     startMenu();
-    do
-    {
+    while (userinput != '9')
+    }
         scanf("%c",&userinput);
         switch (userinput)
         {
-        case '1': break;
+        case '1': startMenu(); break;
         case '2': break;
         case '3': break;
         case '4': break;
@@ -74,5 +71,5 @@ int main(void)
         case '7': break;
         case '8': break;
         }
-    } while (userinput != '9');
+    } 
 }
