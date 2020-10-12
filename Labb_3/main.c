@@ -58,7 +58,7 @@ int main(void)
     char userinput;
     startMenu();
     while (userinput != '9')
-    }
+    {
         scanf("%c",&userinput);
         switch (userinput)
         {
