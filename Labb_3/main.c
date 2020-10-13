@@ -89,7 +89,11 @@ int main(void)
     int numbers_of_accounts=0;
     char userinput;
     startMenu();
+<<<<<<< HEAD
     while (userinput != '7')
+=======
+    while (userinput != '9')
+>>>>>>> 5347bfb3e01afe506a5b059d7f80d9c88de0174e
     {
         scanf("%c",&userinput);
         switch (userinput)
