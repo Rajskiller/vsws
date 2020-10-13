@@ -23,13 +23,17 @@ void printBook(Book *aBook)
 
 }
 int main(void){
-    char
-    printf("Enter the Title of the book");
-    scanf("%[^'\n']%*c", );
-    Book firstbook={"Avatar",
-                    "A.A:Miles",
-                    0.25f,"Library"};
-    printf("Library 0.4\n");
-    printBook(&firstbook);
-    printf("Exit Library\n");
+    int kontrolval= /*char värde för 9*/;
+ for (int i = 0; i < antal_k; i++)
+ {
+     for (int i = 6; i < kontonummer; i--)
+     {
+         000001 
+         123456
+         123466
+         300411
+     } 
+     
+ }
+ 
 }
