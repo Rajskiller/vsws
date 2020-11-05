@@ -44,6 +44,8 @@ void deposit(Account account_Quantity[], int *numbers_of_accounts,char tempnumbe
 void withdraw(Account account_Quantity[], int *numbers_of_accounts, char tempnumber[]);//Done
 
 void delete_account_menu(Account account_Quantity[], int *numbers_of_accounts);
+void save_bank(Account account_Quantity[], int *numbers_of_accounts);
+void load_bank(Account account_Quantity[], int *numbers_of_accounts);
 
 Account intitaccount(char account_number[],char ownername[], int balance);
 int main(void);
@@ -344,8 +346,44 @@ void delete_account(Account account_Quantity[], int *numbers_of_accounts)
     {
         if(strcmp(tempnumber,account_Quantity[i].account_number)==0)
     }
-    
-
+}
+void save_bank(Account account_Quantity[], int *numbers_of_accounts)
+{
+    FILE *pbankfile;
+    printf("Spara... ");
+    if ((*pbankfile=fopen("data.txt","w")))
+    {
+        for (int i = 0; i < *numbers_of_accounts; i++)
+        {
+            fprintf(pbankfile, "%s","%s", "%d\n",
+            account_Quantity[i].account_number,
+            account_Quantity[i].owner_name,
+            account_Quantity[i].balance);
+            printf("*");
+        }
+    }
+    else
+        printf("ERROR kunde inte spara filen");
+    fclose(pbankfile);
+}
+void load_bank(Account account_Quantity[], int *numbers_of_accounts)
+{
+    FILE *pbankfile;
+    printf("Laddar...");
+    if((pbankfile=fopen("data.txt","r"))
+    {
+        while (fscanf(pbankfile, "%s" "%s" "%d",
+        account_Quantity[*numbers_of_accounts].account_number,
+        account_Quantity[*numbers_of_accounts].owner_name,
+        account_Quantity[*numbers_of_accounts].balance)==3)
+        {
+            (*numbers_of_accounts)++;
+            printf("*");
+        }
+        else
+            printf("ERROR Kunde inte ladda upp filen");
+        fclose(pbankfile);
+    }
 }
 Account intitaccount(char account_number[],char ownername[], int balance)
 {
