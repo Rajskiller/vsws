@@ -33,10 +33,10 @@ void sort_by_account_number(Account account_Quantity[], int*numbers_of_accounts)
 void sort_by_name(Account account_Quantity[], int*numbers_of_accounts);//Done
 void sort_by_balance(Account account_Quantity[], int*numbers_of_accounts);// Done
 
-void search_accounts_menu(Account account_Quantity[], int*numbers_of_accounts);//Done
-void search_by_number(Account account_Quantity[], int *numbers_of_accounts);//Done
-void search_by_name(Account account_Quantity[], int *numbers_of_accounts);//Done
-void search_by_balance(Account account_Quantity[], int *numbers_of_accounts);//Done
+int search_accounts_menu(Account account_Quantity[], int*numbers_of_accounts);//Done
+void search_by_number(Account account_Quantity[], int *numbers_of_accounts, int*numbers_accounts_found,int *account_found);
+void search_by_name(Account account_Quantity[], int *numbers_of_accounts, int*numbers_accounts_found,int *account_found);//
+void search_by_balance(Account account_Quantity[], int *numbers_of_accounts, int*numbers_accounts_found,int *account_found);//
 
 void change_account_balance_menu(Account account_Quantity[], int *numbers_of_accounts);//Done
 void deposit_withdraw_menu(Account account_Quantity[], int *numbers_of_accounts); //Done
@@ -44,10 +44,9 @@ void deposit(Account account_Quantity[], int *numbers_of_accounts,char tempnumbe
 void withdraw(Account account_Quantity[], int *numbers_of_accounts, char tempnumber[]);//Done
 
 void delete_account_menu(Account account_Quantity[], int *numbers_of_accounts);
-void save_bank(Account account_Quantity[], int *numbers_of_accounts);
+void save_bank(Account account_Quantity[], int numbers_of_accounts);
 void load_bank(Account account_Quantity[], int *numbers_of_accounts);
 
-Account intitaccount(char account_number[],char ownername[], int balance);
 int main(void);
 // Sort by Account number(Check asic value of the number)
 
@@ -96,8 +95,8 @@ int register_new_account(Account account_Quantity[], int *numbers_of_accounts) /
     printf("\n\nRegistera nya konton");
     while(*numbers_of_accounts<ACCOUNTMAX)
     {
-        printf("\nAnge kontonummer (q for att avsluta):  ");
-        scanf("\n%[^\n]%*c", temp_acc.account_number);
+        printf("\nAnge kontonummer (q for att avsluta): ");
+        scanf("%s%c", temp_acc.account_number);
         printf("%s", temp_acc.account_number);
         while(strcmp(temp_acc.account_number, account_Quantity[tempaccindex].account_number)!=0){
             if (strcmp(temp_acc.account_number,"q")==0) return 0;
@@ -113,7 +112,7 @@ int register_new_account(Account account_Quantity[], int *numbers_of_accounts) /
             scanf("%[^\n]%*c", temp_acc.owner_name);
             strupr(temp_acc.owner_name);
             temp_acc.balance=0;
-            account_Quantity[*numbers_of_accounts]=temp_acc;
+            account_Quantity[*numbers_of_accounts+1]=temp_acc;
             (*numbers_of_accounts)++;
             printf("%s", account_Quantity[*(numbers_of_accounts)].account_number);
             return 0;
@@ -124,7 +123,7 @@ void print_all_accounts(Account account_Quantity[],int *numbers_of_accounts)// C
 {
     printf("Alla Konton\n");
     printf("Konto-nr\tAgare\tSaldo (kr)");
-    printf("_______________________________________________");
+    printf("\n_______________________________________________");
     for (int i = 0; i < *numbers_of_accounts+1; i++)
     {
         printf("\n%s\t", account_Quantity[i].account_number);
@@ -192,50 +191,59 @@ void sort_by_balance(Account account_Quantity[], int*numbers_of_accounts)
         }   
     }
 }
-void search_account_menu(Account account_Quantity[], int *numbers_of_accounts)
+int search_accounts_menu(Account account_Quantity[], int *numbers_of_accounts)
 {
+    int userinput, numbers_accounts_found=0, account_found;
     print_search_menu();
-    int userinput;
-    while(userinput!=4)
+    scanf("%d",&userinput);
+    switch (userinput)
     {
-        print_search_menu();
-        scanf("%d",&userinput);
-        switch (userinput)
-        {
-        case 1: search_by_number(account_Quantity,numbers_of_accounts); break;
-        case 2: search_by_name(account_Quantity,numbers_of_accounts); break;
-        case 3: search_by_balance(account_Quantity,numbers_of_accounts); break;
-        }
+        case 1: search_by_number(account_Quantity,numbers_of_accounts,&numbers_accounts_found,&account_found); break;
+        case 2: search_by_name(account_Quantity,numbers_of_accounts,&numbers_accounts_found,&account_found); break;
+        case 3: search_by_balance(account_Quantity,numbers_of_accounts,&numbers_accounts_found,&account_found); break;
     }
+    if(numbers_accounts_found==1){
+        return account_found;
+    }
+    else
+    {
+        account_found=ACCOUNTMAX+1;
+        return account_found;
+    }
+    
 }
-void search_by_number(Account account_Quantity[], int *numbers_of_accounts)
+void search_by_number(Account account_Quantity[], int *numbers_of_accounts, int*numbers_accounts_found,int *account_found)
 {
     char tempnumber[ACCOUNT_NUMBER_MAX];
     printf("Ange kontonummer: ");
-    scanf("\n%[^\n]%*c", tempnumber);
-    for (int i = 0; i < *numbers_of_accounts; i++)
+    scanf("%s%*c", tempnumber);
+    for (int i = 0; i < *numbers_of_accounts+1; i++)
     {
-        if(strstr(account_Quantity[i].account_number,tempnumber))
+        if(strstr(tempnumber,account_Quantity[i].account_number))
         {
             printf("\n%s\t%s\t%d", account_Quantity[i].account_number,account_Quantity[i].owner_name,account_Quantity[i].balance);
+            (*numbers_accounts_found)++;
+            *account_found=i;
         }        
     }
 }
-void search_by_name(Account account_Quantity[], int *numbers_of_accounts)
+void search_by_name(Account account_Quantity[], int *numbers_of_accounts, int*numbers_accounts_found,int *account_found)
 {
-    char tempname[NAMESIZE];
+    Account tempname;
     printf("Ange Namn: ");
-    scanf("\n%[^\n]%*c", tempname);
+    scanf("\n%[^\n]%*c", tempname.owner_name);
     for (int i = 0; i < *numbers_of_accounts; i++)
     {
-        if (strstr(account_Quantity[i].owner_name, tempname))
+        if (strstr(tempname.owner_name,account_Quantity[i].owner_name))
         {
             printf("\n%s\t%s\t%d", account_Quantity[i].account_number,account_Quantity[i].owner_name,account_Quantity[i].balance);   
+            (*numbers_accounts_found)++;
+            *account_found=i;
         }
         
     }
 }
-void search_by_balance(Account account_Quantity[], int *numbers_of_accounts)
+void search_by_balance(Account account_Quantity[], int *numbers_of_accounts, int*numbers_accounts_found,int *account_found)
 {
     int min,max;
     printf("Ange min:");
@@ -247,14 +255,15 @@ void search_by_balance(Account account_Quantity[], int *numbers_of_accounts)
         if(min<= account_Quantity[i].balance && account_Quantity[i].balance <=max)
         {
             printf("%s\t%s\t%d\n", account_Quantity[i].account_number,account_Quantity[i].owner_name,account_Quantity[i].balance);
+            (*numbers_accounts_found)++;
+            *account_found=i;
         }
-        
     }
-    
 }
 void change_account_balance_menu(Account account_Quantity[], int *numbers_of_accounts)
 {
     char userinput_;
+    int numbers_accounts_found=0,account_found;
     printf("Ange sok satt");
     print_change_balance_menu();
     while(userinput_!='3')
@@ -262,8 +271,8 @@ void change_account_balance_menu(Account account_Quantity[], int *numbers_of_acc
         scanf("%c", &userinput_);
         switch (userinput_)
         {
-        case '1': search_by_number(account_Quantity,numbers_of_accounts); deposit_withdraw_menu(account_Quantity,numbers_of_accounts); break;
-        case '2': search_by_name(account_Quantity,numbers_of_accounts); deposit_withdraw_menu(account_Quantity, numbers_of_accounts); break;
+        case '1': search_by_number(account_Quantity,numbers_of_accounts,&numbers_accounts_found,&account_found); deposit_withdraw_menu(account_Quantity,numbers_of_accounts); break;
+        case '2': search_by_name(account_Quantity,numbers_of_accounts,&numbers_accounts_found,&account_found); deposit_withdraw_menu(account_Quantity, numbers_of_accounts); break;
         }
     }
 }
@@ -274,7 +283,7 @@ void deposit_withdraw_menu(Account account_Quantity[], int *numbers_of_accounts)
     printf("\nAnge kontonummer: ");
     scanf("%[^\n]%*c", tempnumber);
     printf("\nAnge insattning, uttdrag eller tillbaka till meny");
-    printf("(1) Insattning\n(2) Uttdag\nAnge val: ");
+    printf("(1) Insattning\n(2) Uttdrag\nAnge val: ");
     while (userinput!=3)
     {
         scanf("%d",&userinput);
@@ -297,7 +306,7 @@ void deposit(Account account_Quantity[], int *numbers_of_accounts,char tempnumbe
     {
         if(strcmp(tempnumber,account_Quantity[i].account_number)==0)
         {
-            account_Quantity[i].balance = account_Quantity[i].balance +tempbalance ;
+            account_Quantity[i].balance = account_Quantity[i].balance +tempbalance;
             index=i;
         }
     }
@@ -324,44 +333,45 @@ void withdraw(Account account_Quantity[], int *numbers_of_accounts, char tempnum
 }
 void delete_account_menu(Account account_Quantity[], int *numbers_of_accounts)
 {
-    printf("Avregistrera");
-    int userinput;
-    printf("Ange sok satt");
-    print_change_balance_menu();
-    while(userinput!=3)
+    int found;
+    char userinput;
+    found = search_accounts_menu(account_Quantity,numbers_of_accounts);
+    printf("%d",found);
+    if(found<ACCOUNTMAX)
     {
-        scanf("%d", &userinput);
-        switch (userinput)
+        printf("Vill du ta bort detta konto (j)");
+        scanf("%c",&userinput);
+        if (userinput=='j')
         {
-        case 1: search_by_number(account_Quantity,numbers_of_accounts);  break;
-        case 2: search_by_name(account_Quantity,numbers_of_accounts);  break;
+            for (int i = found; i < *numbers_of_accounts-1; i++)
+            {
+                account_Quantity[i]=account_Quantity[i+1];
+            }
+            (*numbers_of_accounts)--;
+            
         }
-    }
+        printf("Vill du ta bort ett till konto (j)?");
+        scanf("%c",&userinput);
+        if (userinput == 'j')
+        {
+            delete_account_menu(account_Quantity, numbers_of_accounts);
+        }
+        
+    }    
 }
-void delete_account(Account account_Quantity[], int *numbers_of_accounts)
-{
-    char tempnumber[ACCOUNT_NUMBER_MAX];
-    printf("Ange Kontonummer");
-    for (int i = 0; i < *numbers_of_accounts; i++)
-    {
-        if(strcmp(tempnumber,account_Quantity[i].account_number)==0)
-    }
-}
-void save_bank(Account account_Quantity[], int *numbers_of_accounts)
+void save_bank(Account account_Quantity[], int numbers_of_accounts)
 {
     FILE *pbankfile;
     printf("Spara... ");
-    if ((*pbankfile=fopen("data.txt","w")))
-    {
-        for (int i = 0; i < *numbers_of_accounts; i++)
+    if ((pbankfile=fopen("data.txt","w")))
+        for (int i = 0; i < numbers_of_accounts+1; i++)
         {
-            fprintf(pbankfile, "%s","%s", "%d\n",
-            account_Quantity[i].account_number,
-            account_Quantity[i].owner_name,
-            account_Quantity[i].balance);
+            fprintf(pbankfile, "%s %s %d\n",
+                account_Quantity[i].account_number,
+                account_Quantity[i].owner_name,
+                account_Quantity[i].balance);
             printf("*");
         }
-    }
     else
         printf("ERROR kunde inte spara filen");
     fclose(pbankfile);
@@ -370,38 +380,25 @@ void load_bank(Account account_Quantity[], int *numbers_of_accounts)
 {
     FILE *pbankfile;
     printf("Laddar...");
-    if((pbankfile=fopen("data.txt","r"))
-    {
-        while (fscanf(pbankfile, "%s" "%s" "%d",
-        account_Quantity[*numbers_of_accounts].account_number,
-        account_Quantity[*numbers_of_accounts].owner_name,
-        account_Quantity[*numbers_of_accounts].balance)==3)
-        {
-            (*numbers_of_accounts)++;
-            printf("*");
+    if((pbankfile=fopen("data.txt","r")))
+        while (fscanf(pbankfile, "%s %s %d",
+            account_Quantity[*numbers_of_accounts].account_number,
+            account_Quantity[*numbers_of_accounts].owner_name,
+            &account_Quantity[*numbers_of_accounts].balance)==3){
+        (*numbers_of_accounts)++;
+        printf("*");
         }
-        else
-            printf("ERROR Kunde inte ladda upp filen");
-        fclose(pbankfile);
-    }
-}
-Account intitaccount(char account_number[],char ownername[], int balance)
-{
-    Account new_account;
-    strcpy(new_account.account_number, account_number);
-    strcpy(new_account.owner_name,ownername);
-    new_account.balance =balance;
-    return new_account;
-
+    else
+        printf("ERROR Kunde inte ladda upp filen");
+    fclose(pbankfile);
+    
 }
 int main(void)
 {
     Account account_Quantity[ACCOUNTMAX]; // Numbers of accounts that exist.
-    account_Quantity[0]=intitaccount("123434", "HEJ PADIG", 50);
-    account_Quantity[1]=intitaccount("123433", "TEST LMAO", 300);
-    account_Quantity[2]=intitaccount("123432", "HATAR C", 100);
-    int numbers_of_accounts=3;
-    int userinput;
+    int numbers_of_accounts=0, userinput;
+    load_bank(account_Quantity,&numbers_of_accounts);
+    printf("%d", numbers_of_accounts);
     while (userinput != 7)
     {
         startMenu();
@@ -411,9 +408,11 @@ int main(void)
             case 1: startMenu(); register_new_account(account_Quantity, &numbers_of_accounts); break;
             case 2: print_all_accounts(account_Quantity, &numbers_of_accounts); break;
             case 3: sort_account_menu(account_Quantity,&numbers_of_accounts); break;
-            case 4: search_account_menu(account_Quantity,&numbers_of_accounts); break;
+            case 4: search_accounts_menu(account_Quantity,&numbers_of_accounts); break;
             case 5: change_account_balance_menu(account_Quantity,&numbers_of_accounts); break;
-            case 6: break;
+            case 6: delete_account_menu(account_Quantity,&numbers_of_accounts); break;
         }
     } 
+    save_bank(account_Quantity,numbers_of_accounts);
+    return 0;
 }
