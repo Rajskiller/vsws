@@ -83,7 +83,6 @@ int main(void){
         {
             drawhand(&nbrofcards);
         }
-        
     }
     printf("Avslutar");
 }
