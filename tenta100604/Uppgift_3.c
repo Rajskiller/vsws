@@ -50,7 +50,7 @@ int foodfound(int animal[],int amount){
 
 int main(void){
     srand(time(NULL));
-    int  time_=0, nbrofsmall= 100 ,nbrofbig=10 ,small[200],big[2];
+    int  time_= 0, nbrofsmall= 100 ,nbrofbig=10 ,small[200],big[2];
     initanimal(small, nbrofsmall);
     initanimal(big, nbrofbig);
     while (time_<100)

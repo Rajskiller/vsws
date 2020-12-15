@@ -12,19 +12,26 @@ typedef struct{
 }card;
 
 //declaring functions
-void drawhand(int *nbrofcards);
+void drawhand(int nbrofcards);
 void fill_deck(card deck[]);
-void print_card(card deck[], int *nbrofcards);
+void print_card(card deck[], int nbrofcards);
 void shuffle(card deck[]);
 void mixswap(card deck[], int tempplace1, int tempplace2);
+void bubblesort(card deck[], int nbroofcards);
+int check_straight(card deck[], int nbrofcards);
 
 //functions
-void drawhand(int *nbrofcards)
+void drawhand(int nbrofcards)
 {
     card deck[DECKSIZE];
     fill_deck(deck);
     shuffle(deck);
     print_card(deck,nbrofcards);
+    if (check_straight(deck, nbrofcards))
+    {
+        printf("Du fick en stege\n");
+    }
+    
 }
 void fill_deck(card deck[]){
     for (int i = 0; i < DECKSIZE; i++)
@@ -50,8 +57,8 @@ void fill_deck(card deck[]){
         }
     }
 }
-void print_card(card deck[], int *nbrofcards){
-    for (int i = 0; i < *nbrofcards; i++)
+void print_card(card deck[], int nbrofcards){
+    for (int i = 0; i < nbrofcards; i++)
     {
         printf("%d%c, " , deck[i].value, deck[i].color);
     }
@@ -65,6 +72,28 @@ void shuffle(card deck[]){
     }
 }
 
+void bubblesort(card deck[], int nbrofcards){
+    for(int i = 0;i<nbrofcards-1;i++)
+    {
+        for (int j = 0; j < nbrofcards-1-i; j++) {
+            if(deck[j].value>deck[j+1].value)
+            {
+                mixswap(deck,j,j+1);
+            }
+        }
+    }
+}
+int check_straight(card deck[], int nbrofcards)
+{
+    bubblesort(deck,nbrofcards);
+    for (int i = 0; i < nbrofcards-1; i++)
+    {
+        if(deck[i].value+1!=deck[i+1].value)
+            return 0;
+    }
+    return 1;
+}
+
 void mixswap(card deck[], int tempplace1, int tempplace2)
 {
     card tempcard= deck[tempplace1];
@@ -73,7 +102,7 @@ void mixswap(card deck[], int tempplace1, int tempplace2)
 }
 
 int main(void){
-    int nbrofcards;
+    int nbrofcards =-1;
     srand(time(NULL));
     while(nbrofcards!=0)
     {
@@ -81,7 +110,7 @@ int main(void){
         scanf("%d", &nbrofcards);
         if (nbrofcards>0&&nbrofcards<11)
         {
-            drawhand(&nbrofcards);
+            drawhand(nbrofcards);
         }
     }
     printf("Avslutar");
