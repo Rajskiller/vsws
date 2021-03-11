@@ -3,19 +3,24 @@
 #include <math.h>
 #define MAX 100
 
-float average(float te);
+float average(float temp);
 
 int main(void)
 {
-    int userin=1,i=-1;
-    float tempretur,temparray[MAX];
+    int amount=1 ,val=0;;
+    float tempretur, sum=0;
     while (tempretur !=0)
     {
-        printf("nTemperatur: ");
+        printf("\nTemperatur %d: ", amount);
         scanf("%f", &tempretur);
-        temparray[i++]= tempretur;
+        if(tempretur<45.0f&&tempretur>30.0f)
+        {
+            sum += tempretur;
+            val++;
+        }
+        amount++;
+        printf("%f",sum);
     }
-    
-    
-
+    sum= sum/val;
+    printf("Medeltemp är %3.1f", sum);
 }

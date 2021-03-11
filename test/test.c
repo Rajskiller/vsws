@@ -1,124 +1,71 @@
-#include <stdbool.h>
-#include<stdio.h>
-#include<math.h>
-#include<assert.h>
-#include<limits.h>
-#define TITLESIZE 20
-#define AUTHORSIZE 20
-#define WHERESIZE 30
-#define BOOKSIZE 100
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#define CARDMAX 52
 
 typedef struct{
-    char title[TITLESIZE+1];
-    char author[AUTHORSIZE+1];
-    float price;
-    char place[WHERESIZE+1];
-}Book;
-void printBook(Book *aBook)
+    char suit;
+    char value;
+} card;
+
+void drawhand(card deck[]);
+void filldeck(card deck[], int size);
+void printdeck(card deck[]);
+
+void printdeck(card deck[]){
+    for(int i =0;i<CARDMAX;i++)
+    {
+        printf("%d%c, ", deck[i].value, deck[i].suit);
+    }
+}
+
+void drawhand(card deck[]){
+    filldeck(deck,CARDMAX);
+    printdeck(deck);
+
+}
+
+void filldeck(card deck[], int size){
+    for (int i =0;i < size;i++)
+    {
+        if(i/13==0){
+            deck[i].suit= 'k';
+            deck[i].value=i+1;
+        }
+        if(i/13==1){
+            deck[i].suit='s';
+            deck[i].value=i+1-13;
+        }
+        if(i/13==2){
+            deck[i].suit='r';
+            deck[i].value=i+1-26;
+        }
+        if(i/13==3){
+            deck[i].suit='h';
+            deck[i].value=i+1-39;
+        }
+    }
+}
+
+
+int main (void)
 {
-    printf("%s\n",aBook->title);
-    printf("%s\n",aBook->author);
-    printf("%.1f\n",aBook->price);
-    printf("%s\n",aBook->place);
-
-}
-int dubbla(int *p){
-
-  (&p)=(&p)*2;
-
-}
-
-int main() {
-
-  int *a;
-
-  &a=3;
-
-  printf("%d",dubbla(a));
-
-  return 0;
-
-}
-int main(void){
-
-int a = 3;
-
-int *c;
-
-*c = a;
-
-printf("%d",*c);
-   /* int kontrolval= char värde för 9;
- for (int i = 0; i < antal_k; i++)
- {
-     for (int i = 6; i < kontonummer; i--)
-     {
-         000001 
-         123456
-         123466
-         300411
-     } 
-     
- }
- */
- 
-}
-int doReg(Bank konto[],int pCount){
-    Bank temp;
-        printf("Register new account.\n");
-        int atKonto=0;
-        while(pCount<MAX)
+    srand(time(NULL));
+    card deck[CARDMAX];
+    char choice ='j';
+    while(choice!='n')
+    {
+        printf("Vill du ha en korthand (j/n)?");
+        scanf("%*c%c",&choice);
+        if(choice='j'){
+            drawhand(deck);
+        }
+        else if(choice='n')
         {
-            do{
-                printf("Enter account-number (q to quit): ");
-                scanf("%s%c", temp.kontonmr);
-                if(!(strcmp(temp.kontonmr, "q")))
-                    return 0;
-                for(int i =0;i<pCount;i++){
-                    if(!(strcmp(temp.kontonmr, konto[i].kontonmr))){
-                        printf("Account-number already exists.\n");
-                        atKonto=i;
-                    }
-
-                }
-
-            }while(!(strcmp(temp.kontonmr, konto[atKonto].kontonmr)));
-            printf("Enter first name: ");
-            scanf("%[^\n]%c",temp.fName);
-            printf("Enter surname: ");
-            scanf("%[^\n]%c",temp.sName);
-            return 0;
-            temp.balance=0;
-            konto[pCount]=temp;
-            (pCount)++;
+            break;
         }
-        printf("Max amount of accounts reached.\n");
-int doReg(Bank konto[],int *pCount){
-    Bank temp;
-        printf("Register new account.\n");
-        int atKonto=0;
-        while(*pCount<MAX){
-            do{
-                printf("Enter account-number (q to quit): ");
-                scanf("%s%*c", temp.kontonmr);
-                if(!(strcmp(temp.kontonmr, "q")))
-                    return 0;
-                for(int i =0;i<*pCount;i++){
-                    if(!(strcmp(temp.kontonmr, konto[i].kontonmr))){
-                        printf("Account-number already exists.\n");
-                        atKonto=i;
-                    }
+        
 
-                }
-
-            }while(!(strcmp(temp.kontonmr, konto[atKonto].kontonmr)));
-            printf("Enter first name: ");
-            scanf("%[^\n]%*c",temp.fName);
-            printf("Enter surname: ");
-            scanf("%[^\n]%*c",temp.sName);
-            return 0;
-            temp.balance=0;
-            konto[*pCount]=temp;
-            (*pCount)++;
-        }
-        printf("Max amount of accounts reached.\n");
+    }
+    printf("avslutar");
+}
